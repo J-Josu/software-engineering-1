@@ -2,30 +2,30 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { pageMetada } from '$stores/pageData';
-  import { addSystem, loadSystems, systems } from '$stores/systemsStore';
-  import { user } from '$stores/sessionStore';
-  
+  import { systems } from '$stores/systemStore';
+  import { user } from '$stores/auth';
+
   import StickyNoteContainer from '$cmps/stickynote/StickyNoteContainer.svelte';
   import WhiteBoardContainer from '$cmps/whiteboard/WhiteBoardContainer.svelte';
-  
-  $pageMetada.title = 'Sistemas Elicitados';
+
+  $pageMetada.title = 'Practica 2';
 
   const formData = {
     name: '',
-    description: ''
-  }
+    description: '',
+  };
 
   const newSystem = () => {
     if (!$user) return;
-    addSystem(formData.name, formData.description, $user.id);
+    // addSystem(formData.name, formData.description, $user.id);
     showFormulary = false;
   };
 
   let showFormulary = false;
 
-  onMount(() => {
-    if ($systems.length === 0) loadSystems();
-  })
+  // onMount(() => {
+  //   if ($systems.length === 0) loadSystems();
+  // });
 </script>
 
 <svelte:head>
@@ -33,6 +33,7 @@
 </svelte:head>
 
 <article>
+  <h1 style="margin-top:2rem; font-size:2rem">Sistemas Elicitados</h1>
   <section>
     {#each $systems as { id, name, stories, slug } (id)}
       {@const systemUrl = `/sistemas/${slug}`}
@@ -40,7 +41,7 @@
         <div class="system">
           <h2>{name}</h2>
           <div class="system-histories">
-            {#each stories as {color, slug }}
+            {#each stories as { color, slug }}
               <StickyNoteContainer {color} link={`${systemUrl}/${slug}`} />
             {/each}
           </div>
@@ -55,7 +56,7 @@
       {#if $systems.length === 0}
         <h2>No se agrego ningun sistema, comienze agregando uno</h2>
       {/if}
-      <button on:click={() => showFormulary = true}>
+      <button on:click={() => (showFormulary = true)}>
         <img src="/add-icon.svg" alt="Simbolo de agregar" />
       </button>
     </div>
@@ -63,11 +64,11 @@
   {#if showFormulary}
     <form on:submit|preventDefault={newSystem}>
       <label for="name">id</label>
-      <input type="text" required name="name" bind:value={formData.name}/>
+      <input type="text" required name="name" bind:value={formData.name} />
       <label for="description">description</label>
-      <input type="text" name="description" bind:value={formData.description}/>
+      <input type="text" name="description" bind:value={formData.description} />
       <button type="submit">Crear</button>
-      <button on:click={() => showFormulary = false}>Cerrar</button>
+      <button on:click={() => (showFormulary = false)}>Cerrar</button>
     </form>
   {/if}
 </article>

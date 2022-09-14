@@ -2,15 +2,22 @@
   import '../app.css';
 
   import Navbar from '$cmps/Navbar.svelte';
+  import { page } from '$app/stores';
 </script>
 
 <Navbar />
 
 <slot />
 
-<footer>
-  <a href="https://github.com/Lucas-Andres-GF/user-history">Build for fun</a>
-</footer>
+{#if $page.url.pathname === '/'}
+  <footer>
+    <a
+      href="https://github.com/J-Josu/software-engineering-1"
+      target="_blank"
+      rel="noopener noreferrer">Build for fun</a
+    >
+  </footer>
+{/if}
 
 <style>
   footer {

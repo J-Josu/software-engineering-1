@@ -1,8 +1,8 @@
 <script lang="ts">
 import type { Storie } from '$lib/types/types';
 
-import { user } from '$stores/sessionStore';
-import { addRule } from '$stores/systemsStore';
+import { user } from '$stores/auth';
+import { addRule } from '$stores/systemStore';
 
   export let storie: Storie;
 

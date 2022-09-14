@@ -1,8 +1,8 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
   import { supabase } from '$db/supabaseClient';
   import { flip } from 'svelte/animate';
-    import { space } from 'svelte/internal';
-    import { fade, fly, slide } from 'svelte/transition';
+  import { fade, fly, slide } from 'svelte/transition';
 
   type LoginType = 'login' | 'register';
   let currentType = 'login';
@@ -20,17 +20,19 @@
     if (type !== currentType) {
       currentType = type;
       buttons = [buttons[1], buttons[0]];
-      titles = [titles[1], titles[0]]
+      titles = [titles[1], titles[0]];
       return;
     }
 
     if (type === 'login') {
-      const result = await supabase.auth.signIn({
-        email,
-        password,
-      });
-
-      console.log(result);
+      const result = await supabase.auth.signIn({ email, password });
+      if (result.error instanceof Error) return console.log(result.error);
+      if (!result.session)
+        return alert(
+          'must confirm account by email\n' + JSON.stringify(result)
+        );
+      console.log('login succesfull\n', result);
+      goto('/');
     } else {
       const result = await supabase.auth.signUp(
         {

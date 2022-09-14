@@ -1,15 +1,15 @@
 import { error, type Load, type Page } from "@sveltejs/kit";
-import { setSystem, system } from '$lib/stores/systemsStore';
-import { get } from 'svelte/store';
+import { setCurrentSystem } from '$stores/systemStore';
+import { browser } from '$app/environment';
 
 interface Params extends Page {
   system_slug: string
 }
 
 export async function load({ params }: Params) {
-  const result = setSystem(params.system_slug);
-
-  if (!result) throw error(404, `No existe systema asociado a ${params.system_slug}`);
-
-  return get(system);
+  if (!browser) return;
+  console.log('navegador xd')
+  const result = setCurrentSystem(params.system_slug);
+  
+  if (!result) throw error(404, `No existe el sistema '${params.system_slug}'`);
 }

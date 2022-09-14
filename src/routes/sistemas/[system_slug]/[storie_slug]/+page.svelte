@@ -1,29 +1,27 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
   import { pageMetada } from '$stores/pageData';
   import StickyNoteContainer from '$cmps/stickynote/StickyNoteContainer.svelte';
   import Card from '$cmps/card/Card.svelte';
-import type { Storie } from '$lib/types/types';
-import { page } from '$app/stores';
-import { system } from '$stores/systemsStore';
+  import { storie, system } from '$stores/systemStore';
 
-  export let data:Storie;
+  $: data = $storie;
 
-  $pageMetada.title = `Historia: ${data.id_custom}`;
+  $: $pageMetada.title = `Historia: ${data?.id_custom}`;
   const newSystem = () => {
     alert('Not implemented');
   };
 </script>
 
 <svelte:head>
-  <title>{$system?$system.name:'Error'}</title>
+  <title>{$system ? $system.name : 'Error'}</title>
 </svelte:head>
 
 <article>
-  <StickyNoteContainer color={data.color} rotate={false}>
-    <Card storie={data}/>
-  </StickyNoteContainer>
-  <section />
+  {#if data}
+    <StickyNoteContainer color={data.color} rotate={false}>
+      <Card storie={data} />
+    </StickyNoteContainer>
+  {/if}
 </article>
 
 <style>

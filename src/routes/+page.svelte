@@ -1,40 +1,44 @@
 <script lang="ts">
   import PracticePreview from '$cmps/PracticePreview.svelte';
+  import { pageMetada } from '$stores/pageData';
+  $pageMetada.title = 'Ingenieria Sofware 1';
 </script>
 
 <svelte:head>
   <title>Asistente IS 1</title>
 </svelte:head>
 
-<article>
-  <div>
-    <h1>Asistente para las Practicas de Ingenieria de software 1</h1>
-    <h2>Practicas</h2>
-    <ul>
-      <li>
-        <PracticePreview
-          link="/sistemas"
-          title="2 - Historias de Usuario"
-          description="Una historia de usuario es una descripción corta y simple de un requerimiento de un sistema, que se escribe en lenguaje común del usuario y desde su perspectiva."
-        />
-      </li>
-      <li>
-        <PracticePreview
-          link="/undefined"
-          title="3 - Place holder"
-          description="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumenda sequi, nemo ipsum impedit, error ipsam adipisci non voluptatibus necessitatibus quidem velit perferendis! Et placeat, aperiam quasi harum tempora asperiores iste."
-        />
-      </li>
-      <li>
-        <PracticePreview
-          link="/undefined"
-          title="4 - Another place holder"
-          description="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumenda sequi, nemo ipsum impedit, error ipsam adipisci non voluptatibus necessitatibus quidem velit perferendis! Et placeat, aperiam quasi harum tempora asperiores iste."
-        />
-      </li>
-    </ul>
-  </div>
-</article>
+<main>
+  <article>
+    <div>
+      <h1>Asistente para las Practicas</h1>
+      <ul>
+        <li>
+          <PracticePreview
+            link="/sistemas"
+            title="2 - Historias de Usuario"
+            description="Una historia de usuario es una descripción corta y simple de un requerimiento de un sistema, que se escribe en lenguaje común del usuario y desde su perspectiva."
+          />
+        </li>
+        <li>
+          <PracticePreview
+            link="/undefined"
+            title="3 - Place holder"
+            description="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumenda sequi, nemo ipsum impedit, error ipsam adipisci non voluptatibus necessitatibus quidem velit perferendis! Et placeat, aperiam quasi harum tempora asperiores iste."
+          />
+        </li>
+        <li>
+          <PracticePreview
+            link="/undefined"
+            title="4 - Another place holder"
+            description="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumenda sequi, nemo ipsum impedit, error ipsam adipisci non voluptatibus necessitatibus quidem velit perferendis! Et placeat, aperiam quasi harum tempora asperiores iste."
+          />
+        </li>
+      </ul>
+    </div>
+  </article>
+</main>
+
 
 <style>
   article {

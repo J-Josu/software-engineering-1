@@ -1,13 +1,13 @@
 <script lang="ts">
-  import type { System } from '$lib/types/types';
   import { pageMetada } from '$stores/pageData';
-  import { user } from '$stores/sessionStore';
-  import { addStorie } from '$stores/systemsStore';
+  import { user } from '$stores/auth';
+  import { addStorie } from '$stores/systemStore';
   
   import StickyNoteContainer from '$cmps/stickynote/StickyNoteContainer.svelte';
   import WhiteBoardContainer from '$cmps/whiteboard/WhiteBoardContainer.svelte';
+    import { system } from '$stores/systemStore';
   
-  export let data: System;
+  $: data = $system
   console.log(data)
   $pageMetada.title = 'Historias de Usuarios';
 
@@ -27,7 +27,7 @@
 </script>
 
 <svelte:head>
-  <title>{data.name}</title>
+  <title>{data?.name}</title>
 </svelte:head>
 
 <article>

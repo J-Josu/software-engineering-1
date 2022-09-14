@@ -1,6 +1,5 @@
 <script lang="ts">
   import { supabase } from '$db/supabaseClient';
-    import { flip } from 'svelte/animate';
 
   let currentType: 'login' | 'register' = 'login';
 
