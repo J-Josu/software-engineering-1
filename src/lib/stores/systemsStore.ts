@@ -4,77 +4,50 @@ import type * as DB from '$lib/types/db';
 import { user } from './auth';
 
 import type { System, Storie } from '$lib/types/types';
-import { toKebabCase } from '$lib/utils';
-import { notify } from './notifyStore';
+import type { User } from '@supabase/supabase-js';
 
-export const systems = writable<System[]>([]);
+const newSystem = (name: string, description: string, user_id: string) => {
+  return {
+    user_id,
+    slug: toKebabCase(name),
+    name,
+    description
+  }
+};
 
-user.subscribe(async $user => {
-  if (!$user) systems.set([]);
-
-  const { data, error } = await supabase
-    .from<DB.Systems>('systems')
-    .select(`
-      *,
-      stories(
+export const systems = derived<[Writable<User | null>], System[]>(
+  // @ts-ignore
+  [user], async ([$user], set) => {
+    if (!$user) set([]);
+    else {
+      const { data, error } = await supabase
+        .from<DB.Systems>('systems')
+        .select(`
         *,
-        rules(*),
-        scenaries(*)
-      )`);
+        stories(
+          *,
+          rules(*),
+          scenaries(*)
+        )`);
 
-  if (error) return console.error(error);
+      if (error) return console.error(error);
 
-  systems.set(data as System[]);
-})
+      set(data as System[]);
+    }
+  }, []
+);
 
-export const addSystem = async (name: string, description: string = '', user_id: string) => {
-  const { data, error } = await supabase
-    .from<DB.Systems>('systems')
-    .insert([{
-      user_id,
-      slug: toKebabCase(name),
-      name,
-      description
-    }]);
+// export const addSystem = async (name: string, description: string = '', user_id: string) => {
+//   const { data, error } = await supabase
+//     .from('systems')
+//     .insert([newSystem(name, description, user_id)]);
 
-  if (error) {
-    return console.error(error);
-  }
+//   if (error) {
+//     return console.error(error);
+//   }
 
-  systems.update($systems => [...$systems, { ...data[0], stories: [] }]);
-}
-
-export const updateSystem = async (id: string, description?: string, name?: string) => {
-  alert('improve this');
-  const { data, error } = await supabase
-    .from<DB.Systems>('systems')
-    .update({ description, name })
-    .match({ id })
-
-  if (error) {
-    return notify(error);
-  }
-
-  systems.update($systems => $systems.map(
-      $system => $system.id === id ?
-        { ...data[0], stories: $system.stories }
-        : $system
-    )
-  );
-}
-
-export const deleteSystem = async (id: string) => {
-  const { error } = await supabase
-    .from<DB.Systems>('systems')
-    .delete({ returning: 'minimal' })
-    .match({ id })
-
-  if (error) {
-    return notify(error);
-  }
-
-  systems.update($systems => $systems.filter($system => $system.id !== id));
-}
+//   systems.update($systems => [...$systems, { ...data[0], stories: [] }]);
+// }
 
 
 export const system = writable<System>();
@@ -105,7 +78,7 @@ export const setCurrentStorie = (storie_slug: string) => {
   const result = $system.stories.find((storie) => storie.slug === storie_slug);
   if (!result) return false;
   storie.set(result);
-  console.log('hola historia', get(storie))
+  console.log('hola historia',get(storie))
   return true;
 }
 

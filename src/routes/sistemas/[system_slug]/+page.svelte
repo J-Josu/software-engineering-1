@@ -1,11 +1,11 @@
 <script lang="ts">
   import { pageMetada } from '$stores/pageData';
   import { user } from '$stores/auth';
-  import { addStorie } from '$stores/systemStore';
+  import { addStorie } from '$stores/systemsStore';
   
   import StickyNoteContainer from '$cmps/stickynote/StickyNoteContainer.svelte';
   import WhiteBoardContainer from '$cmps/whiteboard/WhiteBoardContainer.svelte';
-    import { system } from '$stores/systemStore';
+    import { system } from '$stores/systemsStore';
   
   $: data = $system
   console.log(data)

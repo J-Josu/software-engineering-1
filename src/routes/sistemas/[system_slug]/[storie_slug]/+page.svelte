@@ -2,7 +2,7 @@
   import { pageMetada } from '$stores/pageData';
   import StickyNoteContainer from '$cmps/stickynote/StickyNoteContainer.svelte';
   import Card from '$cmps/card/Card.svelte';
-  import { storie, system } from '$stores/systemStore';
+  import { storie, system } from '$stores/systemsStore';
 
   $: data = $storie;
 

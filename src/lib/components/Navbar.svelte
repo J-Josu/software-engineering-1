@@ -12,9 +12,8 @@
 
     goto('/login');
   };
-  
-  $: title =
-    $page.url.pathname !== '/login' ? $pageMetada.title : 'Autenticando';
+
+  $: title = $pageMetada.title ? $pageMetada.title : '';
 </script>
 
 <header>
@@ -68,8 +67,5 @@
   }
   button {
     border: none;
-  }
-  ol {
-    display: flex;
   }
 </style>

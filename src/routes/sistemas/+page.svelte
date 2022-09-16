@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { pageMetada } from '$stores/pageData';
-  import { systems } from '$stores/systemStore';
   import { user } from '$stores/auth';
+  import { pageMetada } from '$stores/pageData';
+  import { systems, addSystem, deleteSystem } from '$stores/systemStore';
 
   import StickyNoteContainer from '$cmps/stickynote/StickyNoteContainer.svelte';
   import WhiteBoardContainer from '$cmps/whiteboard/WhiteBoardContainer.svelte';
@@ -15,17 +15,13 @@
     description: '',
   };
 
-  const newSystem = () => {
+  const newSystem = async () => {
     if (!$user) return;
-    // addSystem(formData.name, formData.description, $user.id);
+    addSystem(formData.name, formData.description, $user.id);
     showFormulary = false;
   };
 
   let showFormulary = false;
-
-  // onMount(() => {
-  //   if ($systems.length === 0) loadSystems();
-  // });
 </script>
 
 <svelte:head>
@@ -37,7 +33,7 @@
   <section>
     {#each $systems as { id, name, stories, slug } (id)}
       {@const systemUrl = `/sistemas/${slug}`}
-      <WhiteBoardContainer onClick={() => goto(systemUrl)}>
+      <WhiteBoardContainer onClick={() => false && goto(systemUrl)}>
         <div class="system">
           <h2>{name}</h2>
           <div class="system-histories">
@@ -48,6 +44,7 @@
           {#if stories.length === 0}
             <p>Ninguna historia a sido agregada</p>
           {/if}
+          <button on:click|preventDefault={() => deleteSystem(id)}>delete</button>
         </div>
       </WhiteBoardContainer>
     {/each}

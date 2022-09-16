@@ -1,13 +1,13 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { user } from '$stores/auth';
+  import { user, userData } from '$stores/auth';
   $: paths = $page.url.pathname.split('/').filter((path) => path !== '');
 </script>
 
 <nav>
   <ol>
-    {#if $user}
-      <li><a href="/perfil">{$user.id.slice(0, 12)}</a>:</li>
+    {#if $userData}
+      <li><a href="/perfil">{$userData.name}</a>:</li>
     {:else}
       <li><a href="/login">anonimo</a>:</li>
     {/if}

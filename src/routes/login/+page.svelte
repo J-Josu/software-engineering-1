@@ -1,6 +1,8 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { supabase } from '$db/supabaseClient';
+  import { userData } from '$stores/auth';
+    import { pageMetada } from '$stores/pageData';
   import { flip } from 'svelte/animate';
   import { fade, fly, slide } from 'svelte/transition';
 
@@ -31,22 +33,29 @@
         return alert(
           'must confirm account by email\n' + JSON.stringify(result)
         );
+      
       console.log('login succesfull\n', result);
       goto('/');
-    } else {
-      const result = await supabase.auth.signUp(
-        {
-          email,
-          password,
-        },
-        {
-          redirectTo: '/',
-        }
-      );
-
-      console.log(result);
+      return;
     }
+
+    const result = await supabase.auth.signUp(
+      {
+        email,
+        password,
+      },
+      {
+        data: {
+          name,
+        },
+        redirectTo: '/',
+      }
+    );
+
+    console.log(result);
   };
+  
+  $pageMetada.title = 'Autenticando';
 </script>
 
 <main>

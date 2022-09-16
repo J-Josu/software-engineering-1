@@ -2,7 +2,7 @@
 import type { Storie } from '$lib/types/types';
 
 import { user } from '$stores/auth';
-import { addRule } from '$stores/systemStore';
+import { addRule } from '$stores/systemsStore';
 
   export let storie: Storie;
 
