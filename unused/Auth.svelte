@@ -59,3 +59,12 @@
     gap: 0.5rem;
   }
 </style>
+
+<form on:submit|preventDefault={newSystem}>
+  <label for="name">id</label>
+  <input type="text" required name="name" bind:value={formData.name} />
+  <label for="description">description</label>
+  <input type="text" name="description" bind:value={formData.description} />
+  <button type="submit">Crear</button>
+  <button on:click={() => (showFormulary = false)}>Cerrar</button>
+</form>

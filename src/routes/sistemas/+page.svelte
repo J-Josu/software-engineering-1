@@ -1,14 +1,13 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { user } from '$stores/auth';
-  import { pageMetada } from '$stores/pageData';
-  import { systems, addSystem, deleteSystem } from '$stores/systemStore';
+  import { systems, addSystem } from '$stores/systemStore';
 
   import StickyNoteContainer from '$cmps/stickynote/StickyNoteContainer.svelte';
   import WhiteBoardContainer from '$cmps/whiteboard/WhiteBoardContainer.svelte';
+  import PopUp from '$cmps/PopUp.svelte';
+  import SystemForm from './SystemForm.svelte';
 
-  $pageMetada.title = 'Practica 2';
 
   const formData = {
     name: '',
@@ -33,7 +32,7 @@
   <section>
     {#each $systems as { id, name, stories, slug } (id)}
       {@const systemUrl = `/sistemas/${slug}`}
-      <WhiteBoardContainer onClick={() => false && goto(systemUrl)}>
+      <WhiteBoardContainer onClick={() => goto(systemUrl)}>
         <div class="system">
           <h2>{name}</h2>
           <div class="system-histories">
@@ -44,7 +43,6 @@
           {#if stories.length === 0}
             <p>Ninguna historia a sido agregada</p>
           {/if}
-          <button on:click|preventDefault={() => deleteSystem(id)}>delete</button>
         </div>
       </WhiteBoardContainer>
     {/each}
@@ -58,16 +56,17 @@
       </button>
     </div>
   </section>
-  {#if showFormulary}
-    <form on:submit|preventDefault={newSystem}>
-      <label for="name">id</label>
-      <input type="text" required name="name" bind:value={formData.name} />
-      <label for="description">description</label>
-      <input type="text" name="description" bind:value={formData.description} />
-      <button type="submit">Crear</button>
-      <button on:click={() => (showFormulary = false)}>Cerrar</button>
-    </form>
-  {/if}
+  <PopUp bind:isDisplayed={showFormulary}>
+    <SystemForm
+      bind:name={formData.name}
+      bind:description={formData.description}
+      on:close={() => (showFormulary = false)}
+      on:submit={() => {
+        newSystem();
+        showFormulary = false;
+      }}
+    />
+  </PopUp>
 </article>
 
 <style>

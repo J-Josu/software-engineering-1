@@ -1,7 +1,5 @@
 <script lang="ts">
   import PracticePreview from '$cmps/PracticePreview.svelte';
-  import { pageMetada } from '$stores/pageData';
-  $pageMetada.title = 'Ingenieria Sofware 1';
 </script>
 
 <svelte:head>

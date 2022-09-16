@@ -1,71 +1,100 @@
 <script lang="ts">
-  import { pageMetada } from '$stores/pageData';
   import { user } from '$stores/auth';
-  import { addStorie } from '$stores/systemsStore';
-  
+  import { addStorie } from '$stores/systemStore';
+
   import StickyNoteContainer from '$cmps/stickynote/StickyNoteContainer.svelte';
   import WhiteBoardContainer from '$cmps/whiteboard/WhiteBoardContainer.svelte';
-    import { system } from '$stores/systemsStore';
-  
-  $: data = $system
-  console.log(data)
-  $pageMetada.title = 'Historias de Usuarios';
+  import { system } from '$stores/systemStore';
+  import PopUp from '$cmps/PopUp.svelte';
+  import StorieForm from './StorieForm.svelte';
+
 
   const formData = {
-    name: '',
-    title: ''
+    id_custom: '',
+    title: '',
   };
 
-  let showFormulary = false;
+  let showForm = false;
   const newStorie = async () => {
     if (!$user) return;
-    const newStorie = await addStorie(formData.name, formData.title, `hsl(${Math.round(Math.random() * 360)} 85% 78%)`, $user.id, data.id);
+    const newStorie = await addStorie(
+      formData.id_custom,
+      formData.title,
+      `hsl(${Math.round(Math.random() * 360)} 85% 78%)`,
+      $user.id,
+      $system!.id
+    );
     if (!newStorie) return;
-    data.stories = [...data.stories, newStorie]
-    showFormulary = false;
+    $system!.stories = [...$system!.stories, newStorie];
+    showForm = false;
   };
+  let confirmDeletion = false;
+  const handleSave = async () => {};
+  const handleDeletion = async () => {};
 </script>
 
 <svelte:head>
-  <title>{data?.name}</title>
+  <title>{$system?.name}</title>
 </svelte:head>
 
 <article>
-  <WhiteBoardContainer>
-    <div class="summary">
-      <h1>{data.name}</h1>
-      <p>{data.description}</p>
-    </div>
-    <section>
-      {#each data.stories as { id, id_custom, description, color, slug } (id)}
-        <StickyNoteContainer link={`/sistemas/${data.slug}/${slug}`} {color}>
-          <div class="historie">
-            <h2>{id_custom}</h2>
-            <p>{description.length < 64 ? description : description.slice(0, 61) + '...'}</p>
-          </div>
-        </StickyNoteContainer>
-      {/each}
-
-      <div class="new-historie">
-        {#if data.stories.length === 0}
-          <h2>No se agrego ninguna historia, comienze agregando una</h2>
-        {/if}
-        <button on:click={() => (showFormulary = true)}>
-          <img src="/add-icon.svg" alt="Simbolo de agregar" />
-        </button>
+  {#if $system}
+    <WhiteBoardContainer>
+      <div class="summary">
+        <h1>{$system.name}</h1>
+        <p>{$system.description}</p>
       </div>
-    </section>
-    {#if showFormulary}
-      <form on:submit|preventDefault={newStorie}>
-        <label for="name">id</label>
-        <input type="text" required name="name" bind:value={formData.name} />
-        <label for="title">title</label>
-        <input type="text" required name="title" bind:value={formData.title} />
-        <button type="submit">Crear</button>
-        <button on:click={() => (showFormulary = false)}>Cerrar</button>
-      </form>
-    {/if}
-  </WhiteBoardContainer>
+      <section>
+        {#each $system.stories as { id, id_custom, description, color, slug } (id)}
+          <StickyNoteContainer
+            link={`/sistemas/${$system.slug}/${slug}`}
+            {color}
+          >
+            <div class="historie">
+              <h2>{id_custom}</h2>
+              <p>
+                {description.length < 64
+                  ? description
+                  : description.slice(0, 61) + '...'}
+              </p>
+            </div>
+          </StickyNoteContainer>
+        {/each}
+
+        <div class="new-historie">
+          {#if $system.stories.length === 0}
+            <h2>No se agrego ninguna historia, comienze agregando una</h2>
+          {/if}
+          <button on:click={() => (showForm = true)}>
+            <img src="/add-icon.svg" alt="Simbolo de agregar" />
+          </button>
+        </div>
+      </section>
+      <PopUp bind:isDisplayed={showForm}>
+        <StorieForm
+          bind:id_custom={formData.id_custom}
+          bind:title={formData.title}
+          on:close={() => (showForm = false)}
+          on:submit={() => {
+            newStorie();
+            showForm = false;
+          }}
+        />
+      </PopUp>
+    </WhiteBoardContainer>
+    <div class="manage-system">
+      <button style:background-color="limegreen" on:click={handleSave}
+        >Guardar sistema</button
+      >
+      <button
+        style:background-color="red"
+        on:click={() => (confirmDeletion = true)}
+      >
+        Eliminar sistema</button
+      >
+    </div>
+    <PopUp bind:isDisplayed={confirmDeletion}>estas seguro</PopUp>
+  {/if}
 </article>
 
 <style>
@@ -75,7 +104,7 @@
     width: 100%;
     padding-top: 0.5rem;
   }
-  article > :global(*) {
+  article:first-child {
     min-height: 70vh;
   }
   .summary {
@@ -132,5 +161,22 @@
   }
   button img {
     width: 100%;
+  }
+  .manage-system {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    gap: 1rem;
+  }
+  .manage-system button {
+    font-size: 1rem;
+    width: min-content;
+    padding-block: 0.25rem;
+    padding-inline: 0.5rem;
+    border-radius: 5%;
   }
 </style>

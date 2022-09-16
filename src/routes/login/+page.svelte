@@ -2,7 +2,6 @@
   import { goto } from '$app/navigation';
   import { supabase } from '$db/supabaseClient';
   import { userData } from '$stores/auth';
-    import { pageMetada } from '$stores/pageData';
   import { flip } from 'svelte/animate';
   import { fade, fly, slide } from 'svelte/transition';
 
@@ -54,8 +53,6 @@
 
     console.log(result);
   };
-  
-  $pageMetada.title = 'Autenticando';
 </script>
 
 <main>

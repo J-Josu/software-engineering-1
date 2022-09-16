@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { pageMetada } from '$stores/pageData';
   import StickyNoteContainer from '$cmps/stickynote/StickyNoteContainer.svelte';
   import Card from '$cmps/card/Card.svelte';
   import { storie, system } from '$stores/systemsStore';
 
   $: data = $storie;
 
-  $: $pageMetada.title = `Historia: ${data?.id_custom}`;
   const newSystem = () => {
     alert('Not implemented');
   };

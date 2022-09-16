@@ -7,7 +7,24 @@ import type { System, Storie } from '$lib/types/types';
 import { toKebabCase } from '$lib/utils';
 import { notify } from './notifyStore';
 
+
 export const systems = writable<System[]>([]);
+
+export const loadSystems = async () => {
+  const { data, error } = await supabase
+    .from<DB.Systems>('systems')
+    .select(`
+      *,
+      stories(
+        *,
+        rules(*),
+        scenaries(*)
+      )`);
+
+  if (error) return console.error(error);
+
+  systems.set(data as System[]);
+}
 
 user.subscribe(async $user => {
   if (!$user) systems.set([]);
@@ -77,21 +94,26 @@ export const deleteSystem = async (id: string) => {
 }
 
 
-export const system = writable<System>();
+export const system = writable<System | null>(null);
 
-export const setCurrentSystem = (system_slug: string) => {
+export const setSystem = async (system_slug: string) => {
   const $systems = get(systems);
+
   if ($systems.length === 0) {
     console.log('Sistemas no cargados');
-    if ($systems.length === 0) return false;
+    // await loadSystems();
+    // if ($systems.length === 0)
+    return false;
   }
 
-  const result = $systems.find((system) => system.slug === system_slug);
+  const result = $systems.find(($system) => $system.slug === system_slug);
   if (!result) return false;
 
   system.set(result);
   return true;
 }
+
+
 export const storie = writable<Storie>();
 
 export const setCurrentStorie = (storie_slug: string) => {
