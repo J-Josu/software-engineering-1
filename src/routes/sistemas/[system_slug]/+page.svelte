@@ -2,9 +2,9 @@
   import { user } from '$stores/auth';
   import { addStorie } from '$stores/systemStore';
 
+  import { system } from '$stores/systemStore';
   import StickyNoteContainer from '$cmps/stickynote/StickyNoteContainer.svelte';
   import WhiteBoardContainer from '$cmps/whiteboard/WhiteBoardContainer.svelte';
-  import { system } from '$stores/systemStore';
   import PopUp from '$cmps/PopUp.svelte';
   import StorieForm from './StorieForm.svelte';
 

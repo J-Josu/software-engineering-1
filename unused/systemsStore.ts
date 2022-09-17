@@ -5,6 +5,7 @@ import { user } from './auth';
 
 import type { System, Storie } from '$lib/types/types';
 import type { User } from '@supabase/supabase-js';
+import { toKebabCase } from '$lib/utils';
 
 const newSystem = (name: string, description: string, user_id: string) => {
   return {
@@ -103,25 +104,25 @@ export const addStorie = async (id_custom: string, description: string, color: s
   return data[0] as Storie
 }
 
-export const addScenarie = async (user_id: string, storie_id: string, title: string, context: string, event: string, response: string) => {
-  const { data, error } = await supabase
-    .from<DB.Scenaries>('scenaries')
-    .insert([{ user_id, storie_id, title, context, event, response }]);
+// export const addScenarie = async (user_id: string, storie_id: string, title: string, context: string, event: string, response: string) => {
+//   const { data, error } = await supabase
+//     .from<DB.Scenaries>('scenaries')
+//     .insert([{ user_id, storie_id, title, context, event, response }]);
 
-  if (error) {
-    return console.error(error);
-  }
+//   if (error) {
+//     return console.error(error);
+//   }
 
-  return data[0] as DB.Scenaries
-}
-export const addRule = async (user_id: string, storie_id: string, description: string) => {
-  const { data, error } = await supabase
-    .from<DB.Rules>('rules')
-    .insert([{ user_id, description, storie_id }]);
+//   return data[0] as DB.Scenaries
+// }
+// export const addRule = async (user_id: string, storie_id: string, description: string) => {
+//   const { data, error } = await supabase
+//     .from<DB.Rules>('rules')
+//     .insert([{ user_id, description, storie_id }]);
 
-  if (error) {
-    return console.error(error);
-  }
+//   if (error) {
+//     return console.error(error);
+//   }
 
-  return data[0] as DB.Rules
-}
+//   return data[0] as DB.Rules
+// }

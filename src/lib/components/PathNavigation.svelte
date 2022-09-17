@@ -8,11 +8,11 @@
 <nav>
   <ol>
     {#if $userData}
-      <li><a href="/perfil">{$userData.name}</a>:</li>
+      <li><a href="/perfil">{$userData.name}</a></li>
     {:else}
-      <li><a href="/login">anonimo</a>:</li>
+      <li><a href="/login">anonimo</a></li>
     {/if}
-    <li><a href="/">/</a></li>
+    <li><a href="/">:/</a></li>
     {#each paths as path, i}
       <li>
         <a href={'/' + paths.slice(0, i + 1).join('/')}

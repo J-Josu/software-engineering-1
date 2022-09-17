@@ -1,78 +1,98 @@
 <script lang="ts">
-import type { Storie } from '$lib/types/types';
+  export let rules: string[];
 
-import { user } from '$stores/auth';
-import { addRule } from '$stores/systemsStore';
+  let rulesInputs = rules.map((rule) => {
+    return { value: rule };
+  });
 
-  export let storie: Storie;
+  // const saveRule = (index:number) => {
+  //   rulesInputs[index].edited = false;
+  //   rules = rulesInputs.filter(rule => !rule.edited).map(rule => rule.value);
+  // }
+  // $: rules = rulesInputs.map((rule) => rule.value);
 
-  let showFormulary:boolean= false;
-  let newDescription:string='';
-
-  const newRule = async () => {
-    if (!$user) return;
-    const newRule = await addRule($user.id, storie.id, newDescription);
-    if (!newRule) return;
-    storie.rules = [...storie.rules, newRule];
-    showFormulary = false;
+  const addRule = () => {
+    rulesInputs = [...rulesInputs, { value: '' }];
   };
 </script>
 
 <div class="container">
-  <div class="card">
-    <form action="">
-      <div class="field">
-        <label for="id">Id:</label>
-        <input type="text" name="id" id="" bind:value={storie.id_custom} />
-      </div>
-      <div class="field">
-        <label for="title">Titulo</label>
-        <input type="text" name="title" id="" bind:value={storie.description} />
-      </div>
-
-      <h1>Reglas de negocio</h1>
-      {#each storie.rules as rule, i}
-        <div class="field">
-          <label for="rule-{i}">Regla {i + 1}:</label>
-          <input type="text" name="rule-{i}" id="" bind:value={rule.description} />
-        </div>
-      {:else}
-        <p>Ningun escenario añadido</p>
-      {/each}
-      {#if showFormulary}
-      <form on:submit|preventDefault={newRule}>
-        <div class="field">
-          <label for="new-rule">Nueva regla:</label>
-          <input type="text" name="new-rule" id="" bind:value={newDescription} />
-          <button type='submit'>Confirmar</button>
-        </div>
-      </form>
-      {/if}
-    </form>
-    <button on:click={()=> showFormulary= true}>Añadir regla</button>
-  </div>
+  <h3>Reglas de negocio ({rulesInputs.length})</h3>
+  <ol>
+    {#each rulesInputs as { value }, i}
+      <li class="field">
+        <label for="rule-{i}">{i + 1}:</label>
+        <textarea
+          required
+          name="rule-{i}"
+          placeholder="Definicion"
+          rows="2"
+          bind:value
+        />
+        <button
+          type="button"
+          class="icon remove-button"
+          on:click|preventDefault={() =>
+            (rulesInputs = rulesInputs.filter((rules, rI) => rI !== i))}
+          >x</button
+        >
+      </li>
+    {:else}
+      <p>Ningun escenario añadido</p>
+    {/each}
+  </ol>
+  <button type="button" class="add-button" on:click={addRule}
+    >Añadir regla</button
+  >
 </div>
 
 <style>
   .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    padding: 1rem;
+    background-color: rgb(182, 86, 86);
   }
-
-  .card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    width: fit-content;
-    padding: 2rem;
-    border-radius: 1rem;
+  h3 {
+    padding-block: 0.5rem;
   }
-
-  form {
+  ol * {
+    font-size: 1.125rem;
+    font-family: inherit;
+  }
+  li {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.5rem;
+    padding-inline: 0.5rem;
+    padding-block: 0.25rem;
+    background-color: hsl(0, 0%, 98%, 0.2);
+  }
+  li + li {
+    border-top: 1px solid hsl(0, 0%, 98%, 0.2);
+  }
+  textarea {
+    outline: none;
+    resize: none;
+    min-width: 32ch;
+    padding: 0.125rem;
+    background-color: transparent;
+    border: none;
+  }
+  button {
+    border: none;
+    background-color: hsl(0, 0%, 98%, 0.5);
+    border-bottom: 1px solid hsl(0, 0%, 98%, 0.75);
+    border-right: 1px solid hsl(0, 0%, 98%);
+  }
+  .add-button {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+  }
+  .remove-button {
+    border-radius: 25%;
+    width: 1.5rem;
+    height: 1.5rem;
+    text-align: center;
+    text-justify: center;
   }
 </style>

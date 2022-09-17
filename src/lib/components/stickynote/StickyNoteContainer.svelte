@@ -50,10 +50,11 @@
     background: rgba(227, 200, 114, 0.4);
     width: 50%;
     height: 12%;
+    max-height: 48px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
     border-radius: 6px/18px 0;
     position: absolute;
-    top: -8%;
+    top: max(-8%, -32px);
     left: 25%;
     -webkit-transform: rotate(-2deg);
     -moz-transform: rotate(-2deg);

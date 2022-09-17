@@ -68,3 +68,31 @@
   <button type="submit">Crear</button>
   <button on:click={() => (showFormulary = false)}>Cerrar</button>
 </form>
+
+
+{#if true}
+<form on:submit|preventDefault={newScenarie}>
+  <div class="field">
+    <label for="title">Nuevo escenario:</label>
+    <input type="text" name="title" id="" bind:value={formData.title} />
+  </div>
+  <div class="field">
+    <label for="context">Dado</label>
+    <input type="text" name="context" id="" bind:value={formData.context} />
+  </div>
+  <div class="field">
+    <label for="situation">Cuando</label>
+    <input type="text" name="" id="" bind:value={formData.event} />
+  </div>
+  <div class="field">
+    <label for="response">Entonces</label>
+    <input
+      type="text"
+      name="response"
+      id=""
+      bind:value={formData.response}
+    />
+  </div>
+  <button type="submit">Añadir escenario</button>
+</form>
+{/if}

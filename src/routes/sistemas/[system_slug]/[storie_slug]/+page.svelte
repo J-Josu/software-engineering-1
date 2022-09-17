@@ -1,23 +1,20 @@
 <script lang="ts">
-  import StickyNoteContainer from '$cmps/stickynote/StickyNoteContainer.svelte';
+  import { storie, system } from '$stores/systemStore';
+
   import Card from '$cmps/card/Card.svelte';
-  import { storie, system } from '$stores/systemsStore';
+  import StickyNoteContainer from '$cmps/stickynote/StickyNoteContainer.svelte';
 
-  $: data = $storie;
-
-  const newSystem = () => {
-    alert('Not implemented');
-  };
+  const handleDeletion = async () => {};
 </script>
 
 <svelte:head>
-  <title>{$system ? $system.name : 'Error'}</title>
+  <title>{$system?.name}</title>
 </svelte:head>
 
 <article>
-  {#if data}
-    <StickyNoteContainer color={data.color} rotate={false}>
-      <Card storie={data} />
+  {#if $storie}
+    <StickyNoteContainer color={$storie.color} rotate={false}>
+      <Card storie={$storie} />
     </StickyNoteContainer>
   {/if}
 </article>

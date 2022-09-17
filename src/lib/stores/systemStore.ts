@@ -73,10 +73,10 @@ export const updateSystem = async (id: string, description?: string, name?: stri
   }
 
   systems.update($systems => $systems.map(
-      $system => $system.id === id ?
-        { ...data[0], stories: $system.stories }
-        : $system
-    )
+    $system => $system.id === id ?
+      { ...data[0], stories: $system.stories }
+      : $system
+  )
   );
 }
 
@@ -113,25 +113,6 @@ export const setSystem = async (system_slug: string) => {
   return true;
 }
 
-
-export const storie = writable<Storie>();
-
-export const setCurrentStorie = (storie_slug: string) => {
-  const $system = get(system);
-  console.log($system)
-  if (!$system) {
-    console.log('Sistema no cargado');
-    return false;
-  }
-
-  const result = $system.stories.find((storie) => storie.slug === storie_slug);
-  if (!result) return false;
-  storie.set(result);
-  console.log('hola historia', get(storie))
-  return true;
-}
-
-
 export const addStorie = async (id_custom: string, description: string, color: string, user_id: string, system_id: string) => {
   const { data, error } = await supabase
     .from('stories')
@@ -152,25 +133,40 @@ export const addStorie = async (id_custom: string, description: string, color: s
   return data[0] as Storie
 }
 
-export const addScenarie = async (user_id: string, storie_id: string, title: string, context: string, event: string, response: string) => {
-  const { data, error } = await supabase
-    .from<DB.Scenaries>('scenaries')
-    .insert([{ user_id, storie_id, title, context, event, response }]);
 
-  if (error) {
-    return console.error(error);
+export const storie = writable<Storie | null>(null);
+
+export const setStorie = async (storie_slug: string) => {
+  const $system = get(system);
+
+  if (!$system || $system.stories.length === 0) {
+    console.log('Sistema no cargado');
+    //maybe try to force load
+    return false;
   }
 
-  return data[0] as DB.Scenaries
+  const result = $system.stories.find((storie) => storie.slug === storie_slug);
+  if (!result) return false;
+
+  storie.set(result);
+  return true;
 }
-export const addRule = async (user_id: string, storie_id: string, description: string) => {
-  const { data, error } = await supabase
-    .from<DB.Rules>('rules')
-    .insert([{ user_id, description, storie_id }]);
 
-  if (error) {
-    return console.error(error);
-  }
 
-  return data[0] as DB.Rules
+export const generateRule = (description: string) => {
+  return {
+    user_id: get(user)!.id,
+    storie_id: get(storie)!.id,
+    description
+  } as DB.Rules
+}
+export const generateScenarie = (title: string, context: string, event: string, response: string) => {
+  return {
+    user_id: get(user)!.id,
+    storie_id: get(storie)!.id,
+    title,
+    context,
+    event,
+    response
+  } as DB.Scenaries
 }
