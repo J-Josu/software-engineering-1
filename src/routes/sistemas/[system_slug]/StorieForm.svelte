@@ -23,6 +23,7 @@
         type="text"
         name="name"
         placeholder="<verbo> <sustantivo>"
+        autocomplete="off"
         pattern="\w+ \w+"
         bind:value={id_custom}
       />
@@ -33,6 +34,7 @@
         required
         name="title"
         placeholder="Como <rol> quiero <algo> para <beneficio>"
+        autocomplete="off"
         rows="4"
         bind:value={title}
       />
@@ -84,9 +86,9 @@
     font-family: inherit;
   }
   .input-group textarea {
-    resize:none;
+    resize: none;
   }
-  
+
   .button-group {
     display: flex;
     align-items: center;

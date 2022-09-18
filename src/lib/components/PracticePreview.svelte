@@ -17,7 +17,7 @@
     transition: background-color 0.5s ease-out;
   }
   div:hover {
-    background-color: hsl(0, 0%, 75%, 0.25);
+    background-color: hsl(0, 0%, 80%, 0.25);
   }
   p {
     margin-left: 1rem;

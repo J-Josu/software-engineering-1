@@ -1,25 +1,24 @@
 <script lang="ts">
-  export let rules: string[];
+  import type { Rules } from '$lib/types/db';
+  import { addRule, deleteRule } from '$stores/systemStore';
 
-  let rulesInputs = rules.map((rule) => {
-    return { value: rule };
-  });
-
-  // const saveRule = (index:number) => {
-  //   rulesInputs[index].edited = false;
-  //   rules = rulesInputs.filter(rule => !rule.edited).map(rule => rule.value);
-  // }
-  // $: rules = rulesInputs.map((rule) => rule.value);
-
-  const addRule = () => {
-    rulesInputs = [...rulesInputs, { value: '' }];
-  };
+  export let id: string;
+  export let title: string;
+  export let rules: Rules[];
 </script>
 
 <div class="container">
-  <h3>Reglas de negocio ({rulesInputs.length})</h3>
+  <div class="field">
+    <label for="id_custom">ID:</label>
+    <input type="text" name="id" bind:value={id} />
+  </div>
+  <div class="field">
+    <label for="description">Titulo:</label>
+    <textarea required name="description" rows="2" bind:value={title} />
+  </div>
+  <h3>Reglas de negocio ({rules.length})</h3>
   <ol>
-    {#each rulesInputs as { value }, i}
+    {#each rules as { description }, i}
       <li class="field">
         <label for="rule-{i}">{i + 1}:</label>
         <textarea
@@ -27,72 +26,94 @@
           name="rule-{i}"
           placeholder="Definicion"
           rows="2"
-          bind:value
+          bind:value={description}
         />
-        <button
-          type="button"
-          class="icon remove-button"
-          on:click|preventDefault={() =>
-            (rulesInputs = rulesInputs.filter((rules, rI) => rI !== i))}
-          >x</button
-        >
+        <button on:click={() => deleteRule(i)}>x</button>
       </li>
     {:else}
-      <p>Ningun escenario añadido</p>
+      <p>Ninguna regla añadida</p>
     {/each}
   </ol>
-  <button type="button" class="add-button" on:click={addRule}
+  <button class="add-button" on:click={addRule}
     >Añadir regla</button
   >
 </div>
 
 <style>
   .container {
+    display: flex;
+    flex-direction: column;
     padding: 1rem;
-    background-color: rgb(182, 86, 86);
+    padding-bottom: 0;
+    width: 100%;
   }
-  h3 {
-    padding-block: 0.5rem;
-  }
-  ol * {
-    font-size: 1.125rem;
-    font-family: inherit;
-  }
-  li {
+  .field {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
     padding-inline: 0.5rem;
     padding-block: 0.25rem;
-    background-color: hsl(0, 0%, 98%, 0.2);
+    font-size: 1.25rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
-  li + li {
-    border-top: 1px solid hsl(0, 0%, 98%, 0.2);
-  }
-  textarea {
+  .field > * {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: normal;
     outline: none;
+  }
+  .field > *:not(label) {
+    padding-inline: 0.25rem;
+    background-color: hsl(0, 0%, 95%, 0.5);
+    border: 1px solid black;
+  }
+  .field label {
+    padding-inline: 0.25rem;
+    font-weight: 500;
+  }
+  .field textarea {
     resize: none;
-    min-width: 32ch;
+    width: 100%;
     padding: 0.125rem;
-    background-color: transparent;
-    border: none;
   }
-  button {
-    border: none;
-    background-color: hsl(0, 0%, 98%, 0.5);
-    border-bottom: 1px solid hsl(0, 0%, 98%, 0.75);
-    border-right: 1px solid hsl(0, 0%, 98%);
-  }
-  .add-button {
+
+  h3 {
     margin-top: 0.5rem;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
+    padding-block: 0.5rem;
+    font-size: 1.5rem;
   }
-  .remove-button {
+  ol {
+    max-height: 50vh;
+    max-width: 80vw;
+    overflow-y: auto;
+  }
+  li.field {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr 2.5rem;
+    align-items: center;
+    padding-inline: 0;
+  }
+  li.field label {
+    justify-self: right;
+  }
+  li.field button {
+    place-self: center;
+    display: grid;
     border-radius: 25%;
     width: 1.5rem;
     height: 1.5rem;
-    text-align: center;
-    text-justify: center;
+    padding: 0;
+    line-height: 100%;
+  }
+
+  .add-button {
+    align-self: center;
+    width: fit-content;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: hsl(0, 0%, 98%, 0.5);
+    border: 1px solid black;
+    font-size: inherit;
   }
 </style>

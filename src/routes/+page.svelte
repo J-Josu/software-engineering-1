@@ -37,7 +37,6 @@
   </article>
 </main>
 
-
 <style>
   article {
     display: flex;
@@ -45,19 +44,15 @@
     padding-block: 5vh;
   }
   article > div {
-    width: 80%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 80%;
   }
   h1 {
     margin-top: 2rem;
     max-width: 32ch;
     text-align: center;
-  }
-  h2 {
-    margin-top: 2rem;
-    background-color: inherit;
   }
   ul {
     display: grid;

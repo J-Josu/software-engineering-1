@@ -1,14 +1,17 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { user, userData } from '$stores/auth';
+  import { user, profile } from '$stores/auth';
 
-  $: paths = $page.url.pathname.split('/').filter((path) => path !== '');
+  $: paths = $page.url.pathname
+    .split('/')
+    .filter((path) => path !== '')
+    .map((path) => (path !== 'undefined' ? path : 'error'));
 </script>
 
 <nav>
   <ol>
-    {#if $userData}
-      <li><a href="/perfil">{$userData.name}</a></li>
+    {#if $profile}
+      <li><a href="/perfil">{$profile.name}</a></li>
     {:else}
       <li><a href="/login">anonimo</a></li>
     {/if}
@@ -34,7 +37,6 @@
     border-bottom: 1px solid hsl(0, 0%, 85%);
     background-color: hsla(0, 0%, 95%, 0.9);
     backdrop-filter: blur(var(--layout-blur));
-    /* box-shadow: inset 5px 0 10px 1px hsl(0, 0%, 80%); */
   }
   ol {
     display: flex;
@@ -51,6 +53,6 @@
     background-color: transparent;
   }
   li > :global(*):hover {
-    background-color: aquamarine;
+    background-color: hsl(160, 100%, 50%, 0.25);
   }
 </style>

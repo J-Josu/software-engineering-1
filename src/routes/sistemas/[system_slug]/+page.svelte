@@ -9,6 +9,7 @@
   import StorieForm from './StorieForm.svelte';
   import { supabase } from '$db/supabaseClient';
   import { goto } from '$app/navigation';
+  import SaveDelete from '$cmps/SaveDelete.svelte';
 
   const formData = {
     id_custom: '',
@@ -87,17 +88,12 @@
         />
       </PopUp>
     </WhiteBoardContainer>
-    <div class="manage-system">
-      <button style:background-color="limegreen" on:click={handleSave}
-        >Guardar sistema</button
-      >
-      <button
-        style:background-color="red"
-        on:click={() => (confirmDeletion = true)}
-      >
-        Eliminar sistema</button
-      >
-    </div>
+    <SaveDelete
+      saveText="Guardar sistema"
+      deleteText="Eliminar sistema"
+      on:save={handleSave}
+      on:delete={() => (confirmDeletion = true)}
+    />
     <PopUp bind:isDisplayed={confirmDeletion}>
       <div class="confirm-popup">
         <h1>Estas seguro que quiere eliminar el sistema '{$system.name}'</h1>

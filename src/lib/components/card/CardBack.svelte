@@ -1,44 +1,28 @@
 <script lang="ts">
   import type { Scenaries } from '$lib/types/db';
-  import { generateScenarie } from '$stores/systemStore';
+  import { deleteScenarie, addScenarie } from '$stores/systemStore';
 
   export let scenaries: Scenaries[];
+
   let currentScenarie = 0;
   let scenarie: Scenaries | null = null;
 
-  $: if (scenaries.length > 0) scenarie = scenaries[currentScenarie];
-
-  let formData = {
-    title: '',
-    context: '',
-    event: '',
-    response: '',
-  };
-
-  const addScenarie = async () => {
-    const scenarie = generateScenarie(
-      formData.title,
-      formData.context,
-      formData.event,
-      formData.response
-    );
-    if (!scenarie) return console.log('No se pudo crear el scenario');
-
-    scenaries = [...scenaries, scenarie];
-    currentScenarie = scenaries.length - 1;
-  };
+  $: {
+    if (scenaries.length > 0) scenarie = scenaries[currentScenarie];
+    else scenarie = null;
+  }
 </script>
 
-<div class="container">
-  <h3>Criterios de Negocio</h3>
+<div class="card">
+  <h3>Criterios de aceptacion ({scenaries.length})</h3>
   {#if scenarie}
-    <ol action="">
+    <ol>
       <li class="field">
         <label for="title">Escenario {currentScenarie + 1}:</label>
         <textarea
           required
           name="title"
-          placeholder="Definicion"
+          placeholder="<título del criterio>"
           rows="2"
           bind:value={scenarie.title}
         />
@@ -48,7 +32,7 @@
         <textarea
           required
           name="context"
-          placeholder="Definicion"
+          placeholder="<un contexto inicial>"
           rows="2"
           bind:value={scenarie.context}
         />
@@ -58,7 +42,7 @@
         <textarea
           required
           name="event"
-          placeholder="Definicion"
+          placeholder="<ocurre un evento>"
           rows="2"
           bind:value={scenarie.event}
         />
@@ -68,7 +52,7 @@
         <textarea
           required
           name="response"
-          placeholder="Definicion"
+          placeholder="<garantiza uno o mas resultados>"
           rows="2"
           bind:value={scenarie.response}
         />
@@ -79,17 +63,29 @@
   {/if}
   <div>
     <button
-      class="change-button"
+      class="manage-button"
       on:click={() =>
         (currentScenarie =
           currentScenarie === 0 ? scenaries.length - 1 : currentScenarie - 1)}
       >Anterior</button
     >
-    <button type="button" class="add-button" on:click={addScenarie}
-      >Añadir escenario</button
+    <button
+      class="manage-button"
+      on:click={() => {
+        deleteScenarie(currentScenarie);
+        currentScenarie = 0;
+      }}>Eliminar escenario</button
     >
     <button
-      class="change-button"
+      class="manage-button"
+      on:click={() => {
+        let currentCount = scenaries.length - 1;
+        addScenarie();
+        currentScenarie = currentCount + 1;
+      }}>Añadir escenario</button
+    >
+    <button
+      class="manage-button"
       on:click={() =>
         (currentScenarie =
           currentScenarie === scenaries.length - 1 ? 0 : currentScenarie + 1)}
@@ -99,9 +95,15 @@
 </div>
 
 <style>
-  .container {
-    padding: 1rem;
-    background-color: rgb(182, 86, 86);
-    outline: var(--dev-outline);
+  li.field {
+    display: grid;
+    grid-template-columns: 1rem 1fr;
+  }
+  li label {
+    grid-column: 1 / -1;
+    justify-self: left;
+  }
+  li textarea {
+    grid-column: 2 / -1;
   }
 </style>

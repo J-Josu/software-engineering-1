@@ -23,6 +23,7 @@
         type="text"
         name="name"
         placeholder="Nombre del sistema"
+        autocomplete="off"
         minlength="4"
         bind:value={name}
       />
@@ -33,6 +34,7 @@
         required
         name="description"
         placeholder="Breve resumen del sistema"
+        autocomplete="off"
         rows="4"
         bind:value={description}
       />
@@ -84,7 +86,7 @@
     font-family: inherit;
   }
   .input-group textarea {
-    resize:none;
+    resize: none;
   }
 
   .button-group {

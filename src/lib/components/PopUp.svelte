@@ -7,7 +7,6 @@
   <div
     bind:this={popUpContainer}
     on:click={(e) => {
-      console.log(e);
       if (e.target == popUpContainer) isDisplayed = false;
     }}
   >
@@ -17,10 +16,8 @@
 
 <style>
   div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    place-items: center;
     position: absolute;
     top: 0;
     left: 0;

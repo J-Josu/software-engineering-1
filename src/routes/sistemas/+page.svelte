@@ -8,7 +8,6 @@
   import PopUp from '$cmps/PopUp.svelte';
   import SystemForm from './SystemForm.svelte';
 
-
   const formData = {
     name: '',
     description: '',
@@ -117,7 +116,7 @@
     align-items: center;
     justify-content: space-around;
     width: 100%;
-    border-radius: 2.5%;
+    border-radius: 1rem;
     transition: border 2s ease;
     border: 1px solid transparent;
   }
@@ -136,7 +135,7 @@
   button:hover {
     scale: 1.1;
     z-index: 1;
-    transition: all 1s ease;
+    transition: all 0.25s ease;
   }
   button img {
     width: 100%;

@@ -1,4 +1,4 @@
-import { derived, get, writable, type Writable } from 'svelte/store';
+import { derived, get, writable } from 'svelte/store';
 import { supabase } from '$db/supabaseClient';
 import type * as DB from '$lib/types/db';
 import { user } from './auth';
@@ -130,17 +130,20 @@ export const addStorie = async (id_custom: string, description: string, color: s
     return null;
   }
 
-  return data[0] as Storie
+  return { ...data[0], rules: [], scenaries: [] } as Storie
 }
-export const deleteStorie = (id: string) => {
+export const deleteStorie = (id: string): boolean => {
   const $system = get(system)!;
-  console.log(JSON.stringify($system))
+
   $system.stories = $system.stories.filter(storie => storie.id !== id);
-  console.log(JSON.stringify(get(systems)));
+
   storie.set(null)
+  return true
 }
-
-
+const updateStorie = async (id: string) => {
+  const $storie = get(storie)!;
+  // onst { data, error } = await supabase.from('rules')
+}
 export const storie = writable<Storie | null>(null);
 
 export const setStorie = async (storie_slug: string) => {
@@ -167,6 +170,40 @@ export const generateRule = (description: string) => {
     description
   } as DB.Rules
 }
+export const addRule = () => {
+  const newRule = {
+    user_id: get(user)!.id,
+    storie_id: get(storie)!.id,
+    description: ''
+  } as DB.Rules;
+
+  storie.update(($storie) => {
+    $storie!.rules = [...$storie!.rules, newRule];
+    return $storie
+  })
+}
+export const deleteRule = (index: number) => {
+  storie.update(($storie) => {
+    $storie!.rules = $storie!.rules.filter((_, i) => i !== index);
+    return $storie
+  })
+}
+const deleteeRule = async (id: string) => {
+  const { data, error } = await supabase
+    .from<DB.Rules>('rules')
+    .delete()
+    .match({ id })
+
+  if (error) console.error(error);
+}
+const upsertRules = async (rules: DB.Rules) => {
+  const { data, error } = await supabase
+    .from<DB.Rules>('rules')
+    .upsert(rules, { onConflict: 'id' });
+
+  if (error) console.error(error)
+}
+
 export const generateScenarie = (title: string, context: string, event: string, response: string) => {
   return {
     user_id: get(user)!.id,
@@ -176,4 +213,25 @@ export const generateScenarie = (title: string, context: string, event: string, 
     event,
     response
   } as DB.Scenaries
+}
+export const addScenarie = () => {
+  const newScenarie = {
+    user_id: get(user)!.id,
+    storie_id: get(storie)!.id,
+    title: '',
+    context: '',
+    event: '',
+    response: ''
+  } as DB.Scenaries
+
+  storie.update(($storie) => {
+    $storie!.scenaries = [...$storie!.scenaries, newScenarie];
+    return $storie
+  })
+}
+export const deleteScenarie = (index: number) => {
+  storie.update(($storie) => {
+    $storie!.scenaries = $storie!.scenaries.filter((_, i) => i !== index);
+    return $storie
+  })
 }

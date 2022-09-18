@@ -40,5 +40,14 @@
   button {
     padding: 0.5rem;
     font-size: 1.25rem;
+    background-color: hsl(0, 0%, 98%, 0.75);
+    border-radius: 0.5rem;
+    border-left: 1px solid hsl(0, 0%, 50%);
+    border-top: 1px solid hsl(0, 0%, 50%);
+    border-right: 1px solid hsl(0, 0%, 10%);
+    border-bottom: 1px solid hsl(0, 0%, 10%);
+  }
+  button:hover {
+    scale: 1.1;
   }
 </style>

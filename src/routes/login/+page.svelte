@@ -1,14 +1,13 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { supabase } from '$db/supabaseClient';
-  import { userData } from '$stores/auth';
   import { flip } from 'svelte/animate';
   import { fade, fly, slide } from 'svelte/transition';
 
   type LoginType = 'login' | 'register';
   let currentType = 'login';
   let titles = ['Iniciar sesion', 'Registrarse'];
-  let buttons: { type?: LoginType; text: string }[] = [
+  let buttons: { type: LoginType; text: string }[] = [
     { type: 'login', text: 'Iniciar Sesion' },
     { type: 'register', text: 'Registrarse' },
   ];
@@ -32,7 +31,7 @@
         return alert(
           'must confirm account by email\n' + JSON.stringify(result)
         );
-      
+
       console.log('login succesfull\n', result);
       goto('/');
       return;
