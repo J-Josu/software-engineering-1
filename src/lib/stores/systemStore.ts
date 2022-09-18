@@ -76,8 +76,7 @@ export const updateSystem = async (id: string, description?: string, name?: stri
     $system => $system.id === id ?
       { ...data[0], stories: $system.stories }
       : $system
-  )
-  );
+  ));
 }
 
 export const deleteSystem = async (id: string) => {
@@ -91,6 +90,7 @@ export const deleteSystem = async (id: string) => {
   }
 
   systems.update($systems => $systems.filter($system => $system.id !== id));
+  system.set(null);
 }
 
 
@@ -131,6 +131,13 @@ export const addStorie = async (id_custom: string, description: string, color: s
   }
 
   return data[0] as Storie
+}
+export const deleteStorie = (id: string) => {
+  const $system = get(system)!;
+  console.log(JSON.stringify($system))
+  $system.stories = $system.stories.filter(storie => storie.id !== id);
+  console.log(JSON.stringify(get(systems)));
+  storie.set(null)
 }
 
 

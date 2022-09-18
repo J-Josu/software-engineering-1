@@ -24,7 +24,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 1;
+    z-index: 10;
     width: 100vw;
     height: 100vh;
     background-color: hsl(0, 0%, 25%, 0.75);

@@ -1,13 +1,14 @@
 <script lang="ts">
   import { user } from '$stores/auth';
-  import { addStorie } from '$stores/systemStore';
+  import { addStorie, deleteSystem } from '$stores/systemStore';
 
   import { system } from '$stores/systemStore';
   import StickyNoteContainer from '$cmps/stickynote/StickyNoteContainer.svelte';
   import WhiteBoardContainer from '$cmps/whiteboard/WhiteBoardContainer.svelte';
   import PopUp from '$cmps/PopUp.svelte';
   import StorieForm from './StorieForm.svelte';
-
+  import { supabase } from '$db/supabaseClient';
+  import { goto } from '$app/navigation';
 
   const formData = {
     id_custom: '',
@@ -30,7 +31,11 @@
   };
   let confirmDeletion = false;
   const handleSave = async () => {};
-  const handleDeletion = async () => {};
+
+  const handleDeletion = async () => {
+    await deleteSystem($system!.id);
+    if (!$system) goto('/sistemas');
+  };
 </script>
 
 <svelte:head>
@@ -93,7 +98,15 @@
         Eliminar sistema</button
       >
     </div>
-    <PopUp bind:isDisplayed={confirmDeletion}>estas seguro</PopUp>
+    <PopUp bind:isDisplayed={confirmDeletion}>
+      <div class="confirm-popup">
+        <h1>Estas seguro que quiere eliminar el sistema '{$system.name}'</h1>
+        <div>
+          <button on:click={() => (confirmDeletion = false)}>Cancelar</button>
+          <button on:click={handleDeletion}>Borrar</button>
+        </div>
+      </div>
+    </PopUp>
   {/if}
 </article>
 
@@ -128,6 +141,15 @@
     z-index: 1;
     transition: all 0.6s ease;
   }
+  section button {
+    width: 4rem;
+    border: none;
+  }
+  section button:hover {
+    scale: 1.1;
+    z-index: 1;
+    transition: all 1s ease;
+  }
   .historie {
     padding-top: 1.5rem;
   }
@@ -150,15 +172,6 @@
     font-size: 1.25rem;
     text-align: center;
   }
-  button {
-    width: 4rem;
-    border: none;
-  }
-  button:hover {
-    scale: 1.1;
-    z-index: 1;
-    transition: all 1s ease;
-  }
   button img {
     width: 100%;
   }
@@ -178,5 +191,25 @@
     padding-block: 0.25rem;
     padding-inline: 0.5rem;
     border-radius: 5%;
+  }
+  .confirm-popup {
+    max-width: max(50%, 320px);
+    padding: 2rem;
+    border-radius: 1rem;
+    background-color: hsl(0, 0%, 95%);
+    box-shadow: 6px 9px 1px rgba(0, 0, 0, 0.1);
+  }
+  .confirm-popup h1 {
+    text-align: center;
+  }
+  .confirm-popup > div {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  .confirm-popup button {
+    padding: 0.5rem;
+    font-size: 1.25rem;
   }
 </style>

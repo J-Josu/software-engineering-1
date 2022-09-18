@@ -1,10 +1,16 @@
 <script lang="ts">
-  import { storie, system } from '$stores/systemStore';
+  import { deleteStorie, storie, system } from '$stores/systemStore';
 
   import Card from '$cmps/card/Card.svelte';
   import StickyNoteContainer from '$cmps/stickynote/StickyNoteContainer.svelte';
+  import DeletePopUp from '$cmps/DeletePopUp.svelte';
+    import { goto } from '$app/navigation';
 
-  const handleDeletion = async () => {};
+  let confirmDeletion = true;
+  const handleDeletion = async () => {
+    await deleteStorie($storie!.id);
+    if (!$system) goto('/sistemas');
+  };
 </script>
 
 <svelte:head>
@@ -16,6 +22,16 @@
     <StickyNoteContainer color={$storie.color} rotate={false}>
       <Card storie={$storie} />
     </StickyNoteContainer>
+    <div class="manage-storie">
+      <button on:click={() => (confirmDeletion = true)}>
+        Eliminar sistema</button
+      >
+    </div>
+    <DeletePopUp
+      bind:isDisplayed={confirmDeletion}
+      warningMessage={`Esta seguro que quiere eliminar la historia '${$storie.id_custom}'`}
+      on:deletion={handleDeletion}
+    />
   {/if}
 </article>
 
@@ -28,15 +44,28 @@
     width: 100%;
     overflow-y: visible;
   }
-  section {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
-    grid-auto-rows: minmax(255px, 1fr);
-    justify-items: center;
-    width: 100%;
-    gap: 2rem;
-    margin-top: 1rem;
+  .manage-storie {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: fixed;
+    right: 0;
+    bottom: 0;
     padding: 1rem;
-    overflow-y: auto;
+    gap: 1rem;
+  }
+  button {
+    width: min-content;
+    padding-block: 0.25rem;
+    padding-inline: 0.5rem;
+    background-color: hsl(0, 100%, 55%);
+    border: none;
+    border-radius: 5%;
+    font-size: 1rem;
+    opacity: 0.75;
+    transition: opacity 0.5s;
+  }
+  button:hover {
+    opacity: 0.9;
   }
 </style>
