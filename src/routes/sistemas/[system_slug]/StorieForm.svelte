@@ -24,7 +24,6 @@
         name="name"
         placeholder="<verbo> <sustantivo>"
         autocomplete="off"
-        pattern="\w+ \w+"
         bind:value={id_custom}
       />
     </div>

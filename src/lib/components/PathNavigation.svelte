@@ -2,7 +2,7 @@
   import { page } from '$app/stores';
   import { user, profile } from '$stores/auth';
 
-  $: paths = $page.url.pathname
+  $: paths = decodeURI($page.url.pathname)
     .split('/')
     .filter((path) => path !== '')
     .map((path) => (path !== 'undefined' ? path : 'error'));
